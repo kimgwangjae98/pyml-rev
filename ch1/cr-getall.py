@@ -7,19 +7,19 @@ from os import makedirs
 import os.path, time, re
 # 이미 처리한 파일인지 확인하기 위한 변수 --- (※2)
 proc_files = {}
-# HTML 내부에 있는 링크를 추출하는 함수 --- (※3)
+# HTML 내부에 있는 링크를 추출하는 함수 --- (※3) 1번째
 def enum_links(html, base):
     soup = BeautifulSoup(html, "html.parser")
     links = soup.select("link[rel='stylesheet']") # CSS
     links += soup.select("a[href]") # 링크
     result = []
-    # href 속성을 추출하고, 링크를 절대 경로로 변환 --- (※4)
+    # href 속성을 추출하고, 링크를 절대 경로로 변환 --- (※4) 2,3번째
     for a in links:
         href = a.attrs['href']
         url = urljoin(base, href)
         result.append(url)
     return result
-# 파일을 다운받고 저장하는 함수 --- (※5)
+# 파일을 다운받고 저장하는 함수 --- (※5) 4번째
 def download_file(url):
     o = urlparse(url)
     savepath = "./" + o.netloc + o.path
@@ -52,7 +52,7 @@ def analyze_html(url, root_url):
     html = open(savepath, "r", encoding="utf-8").read()
     links = enum_links(html, url)
     for link_url in links:
-        # 링크가 루트 이외의 경로를 나타낸다면 무시 --- (※11)
+        # 링크가 루트 이외의 경로를 나타낸다면 무시 --- (※11) 5번째
         if link_url.find(root_url) != 0:
             if not re.search(r".css$", link_url): continue
         # HTML이라면
